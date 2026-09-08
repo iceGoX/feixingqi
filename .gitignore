@@ -1,0 +1,27 @@
+node_modules/
+dist/
+.data/
+*.log
+.env
+.env.*
+!*.example
+.DS_Store
+artifacts/
+__pycache__/
+
+# Local design experiments, exports, deployment records and unused assets
+/design/pixso-export/
+/design/revision-*/
+/design/0*.png
+/design/pixso-create.js
+/RELEASE.md
+/design-qa.md
+/assets/plane-*.png
+/assets/plane-*.jpg
+/assets/lobby-hero.png
+
+# Private deployment and design configuration
+/.local/
+/design/pixso.json
+/tools/deploy.py
+*.bundle

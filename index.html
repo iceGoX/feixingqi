@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#FFF8EE">
+  <meta name="description" content="和朋友一起玩飞行棋。支持2至4人好友房与同屏对局，双人各控两色。">
+  <title>飞行棋 · 一起，准备起飞</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="preload" as="image" href="./assets/lobby-hero.webp">
+  <script type="module" src="./game.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <button class="brand" id="brandButton" aria-label="飞行棋，返回大厅">飞行棋</button>
+    <span id="modeLabel" class="mode-label"></span>
+    <div class="header-actions"><button id="inviteButton" class="quiet" hidden>复制邀请</button><button id="rulesButton" class="quiet">玩法规则 <span aria-hidden="true">?</span></button></div>
+  </header>
+  <div id="connectionBanner" class="connection-banner" role="status" hidden></div>
+  <main id="main">
+    <section id="lobbyPage" class="page lobby-layout">
+      <div class="hero"><h1 id="lobbyTitle">一起，准备起飞。</h1><p class="hero-subtitle">掷一颗骰子，和朋友绕世界一圈。</p><img src="./assets/lobby-hero.webp" alt="红黄蓝绿四架小飞机围着一颗骰子，准备一起起飞" width="1254" height="1254" class="hero-image"></div>
+      <div class="entry-panel">
+        <h2>开始一局</h2>
+        <div class="segmented lobby-tabs" role="tablist" aria-label="进入方式"><button id="createTab" role="tab" aria-selected="true" aria-controls="entryForm" class="active">创建房间</button><button id="joinTab" role="tab" aria-selected="false" aria-controls="entryForm">加入房间</button></div>
+        <form id="entryForm" novalidate>
+          <label class="field">你的昵称<input id="nickname" name="nickname" maxlength="24" autocomplete="nickname" placeholder="怎么称呼你？" required></label>
+          <label class="field" id="roomField" hidden>房间号<input id="roomCode" name="roomCode" maxlength="6" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="例如 A7K2Q9"><span class="helper">输入朋友分享的六位字母或数字</span></label>
+          <fieldset id="countField"><legend>玩家人数</legend><div class="segmented player-count"><label><input type="radio" name="capacity" value="2"><span>2 人</span></label><label><input type="radio" name="capacity" value="3"><span>3 人</span></label><label><input type="radio" name="capacity" value="4" checked><span>4 人</span></label></div><p id="countHint" class="helper">每人 4 架飞机，各执一种颜色</p><div class="team-colors" aria-label="红黄蓝绿四支队伍"><span class="team-red">红色</span><span class="team-yellow">黄色</span><span class="team-blue">蓝色</span><span class="team-green">绿色</span></div></fieldset>
+          <p id="formError" class="error-message" role="alert" hidden></p>
+          <button id="entrySubmit" class="primary wide" type="submit">创建房间</button>
+          <button id="localButton" class="secondary wide" type="button">同屏开局</button>
+          <p id="localHint" class="helper center">和身边的朋友轮流操作</p>
+        </form>
+        <div id="resumeLocal" class="resume-line" hidden><span>还有一局同屏游戏</span><button id="resumeButton" class="text-button">继续对局</button></div>
+      </div>
+      <p class="lobby-foot">掷 6 起飞 <span>·</span> 同色跳跃 <span>·</span> 全部抵达获胜</p>
+    </section>
+    <section id="waitingPage" class="page lobby-layout" hidden>
+      <div class="hero"><h1 id="waitingTitle">等朋友，一起起飞。</h1><p class="hero-subtitle">把邀请发给朋友，准备出发。</p><img src="./assets/lobby-hero.webp" alt="等待朋友的四架小飞机" width="1254" height="1254" class="hero-image"></div>
+      <div class="entry-panel waiting-panel"><p class="eyebrow">房间已准备好</p><div class="room-code-line"><strong id="waitingCode"></strong><button id="copyCodeButton" class="text-button" aria-label="复制房间号">复制</button></div><button id="copyInviteButton" class="primary wide">复制邀请链接</button><p id="seatCount" class="seat-count"></p><div id="waitingSeats" class="seat-grid"></div><button id="startButton" class="primary wide" disabled>等待玩家加入</button><p id="waitingHint" class="helper center"></p><button id="leaveWaitingButton" class="secondary wide">退出房间</button></div>
+    </section>
+    <section id="gamePage" class="page game-layout" hidden>
+      <div class="board-column"><div id="playerStrip" class="player-strip"></div><div class="turn-line"><h1 id="turnHeading"></h1><span id="turnNumber"></span></div><div id="board" class="board" aria-label="飞行棋棋盘"></div></div>
+      <aside class="action-panel" aria-label="对局操作"><div class="action-heading"><h2 id="actionTitle"></h2><p id="actionHint" class="helper"></p></div><div class="dice-area"><div id="die" class="die" role="img" aria-label="骰子"></div><p id="diceCaption" class="helper"></p></div><button id="rollButton" class="primary wide">掷骰子</button><div id="selectionArea" hidden><p id="selectHint" class="selection-label">选择要移动的飞机</p><div id="planeChoices" class="plane-choices"></div><p id="previewHint" class="preview-hint" aria-live="polite"></p><label id="stackOption" class="stack-option" hidden><input id="mergeCheck" type="checkbox"><span>与该格同色飞机叠成一组<small>叠成后一起移动，不能拆开</small></span></label><button id="confirmButton" class="primary wide" disabled>确认移动</button><button id="cancelSelection" class="text-button wide">重新选择</button></div><p id="gameError" class="error-message" role="alert" hidden></p><div class="player-summary"><h3>本局玩家</h3><div id="playerList"></div></div><details id="moveDetails" class="move-details"><summary>刚刚发生了什么</summary><ol id="moveLog"></ol></details><button id="leaveGameButton" class="secondary wide leave-game">返回大厅</button></aside>
+    </section>
+    <section id="resultPage" class="page lobby-layout" hidden><div class="hero"><h1 id="resultTitle">本局已结束</h1><p id="resultSubtitle" class="hero-subtitle"></p><img src="./assets/lobby-hero.webp" alt="完成飞行的小飞机" width="1254" height="1254" class="hero-image"></div><div class="entry-panel result-panel"><h2>本局名次</h2><ol id="rankingList" class="ranking-list"></ol><button id="replayButton" class="primary wide">再来一局</button><p id="replayHint" class="helper center" aria-live="polite"></p><button id="resultLobbyButton" class="secondary wide">返回大厅</button></div></section>
+  </main>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <dialog id="rulesDialog" class="rules-dialog"><div class="dialog-card"><div class="dialog-header"><h2>怎么玩飞行棋</h2><button class="icon-button" data-close="rulesDialog" aria-label="关闭规则">×</button></div><div class="rules-content"><section><h3>先把机队送到终点</h3><p>2～4 人轮流掷骰。双人模式每人控制两种相对颜色，共 8 架飞机；3 人、4 人模式每人控制一种颜色、4 架飞机。最先让自己全部飞机抵达终点的玩家获胜，其余玩家继续争夺名次。</p></section><section><h3>掷出 6，就能起飞</h3><p>掷出 6 可以选择一架机场里的飞机移到起飞点，也可以移动已经起飞的飞机。起飞这一步不再前进 6 格。完成行动后，可以再掷一次；本版本没有“三连六回机场”处罚。</p></section><section><h3>跳跃与飞行，自动完成</h3><p>按点数落在本色环道格时，向前跳 4 格，普通跳跃只执行一次。直接走到本色捷径起点，会沿虚线飞过，再跳 4 格；如果是跳到捷径起点，只飞过，不再追加 4 格。进入终点航道后不跳跃。</p></section><section><h3>撞回机场，重新起飞</h3><p>走步、跳跃及飞行的落点上，敌方飞机全部被撞回机场；飞行还会撞回虚线与敌方终点航道交叉点上的飞机。普通走步经过的飞机不受影响。</p><p>双人模式中，自己的两色飞机不互撞。它们可以同格分别停留，但不同颜色不能叠成一组。</p></section><section><h3>叠成一组，一起移动</h3><p>落点有同色飞机时，可以勾选“叠成一组”。也可以不叠，各自移动。已组成的叠子持续作为一个整体行动，不能拆开；被撞回机场后解除叠子，分别重新起飞。</p></section><section><h3>恰好到达才算完成</h3><p>到达本色入口后沿箭头进入终点航道。点数超过距离时，从终点向后退完剩余步数。例如还差 2 格时掷出 5：先走 2 格，再后退 3 格。已完成的飞机不再移动。</p></section><section><h3>点选，再确认</h3><p>先掷骰，再轻点棋盘里的飞机或下方选机按钮，查看落点预览后确认。每次只操作一架飞机或一组叠子。没有飞机可动时自动轮到下一位。退出对局会结束你的参与，其余玩家继续。</p></section></div><button class="primary wide" data-close="rulesDialog">知道了</button></div></dialog>
+  <dialog id="confirmDialog" class="confirm-dialog"><div class="dialog-card"><h2 id="confirmTitle"></h2><p id="confirmMessage"></p><div class="dialog-actions"><button id="confirmCancel" class="primary">继续对局</button><button id="confirmAccept" class="secondary danger">确认退出</button></div></div></dialog>
+  <dialog id="copyDialog" class="confirm-dialog"><div class="dialog-card"><h2>手动复制邀请</h2><p>长按或选中下面的链接，复制给朋友。</p><input id="copyFallback" readonly aria-label="邀请链接"><button class="primary wide" data-close="copyDialog">知道了</button></div></dialog>
+  <noscript><p class="noscript">飞行棋需要启用 JavaScript 才能运行。</p></noscript>
+</body>
+</html>
