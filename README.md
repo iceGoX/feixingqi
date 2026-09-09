@@ -4,6 +4,12 @@
 
 协作规范与 UI 偏好见 [AGENTS.md](AGENTS.md)。
 
+## 游戏预览
+
+<img src="docs/images/game-preview.webp" alt="飞行棋 Pixso 对局设计预览" width="960">
+
+*Pixso 对局设计预览。*
+
 ## 设计与规则
 
 - Pixso「飞行棋」设计包含 11 个画板；真实文件链接与索引仅保存在本地配置中。
