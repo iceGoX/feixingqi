@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-const files=['index.html','styles.css','game.js','manifest.json','shared/board.js','shared/engine.js','shared/motion.js','server/app.js','package.json','assets/lobby-hero.webp','assets/planes-q-atlas.jpg'];
+const files=['assets/icons/favicon-32-v1.png','assets/icons/apple-touch-icon-v1.png','assets/icons/favicon-64-v1.png','assets/icons/icon-192-v1.png','assets/icons/icon-512-v1.png','index.html','styles.css','game.js','manifest.json','shared/board.js','shared/engine.js','shared/motion.js','server/app.js','package.json','assets/lobby-hero.webp','assets/planes-q-atlas.jpg'];
 for(const file of ['game.js','shared/board.js','shared/engine.js','shared/motion.js','server/app.js','sw.js'])execFileSync(process.execPath,['--check',file]);
 const hash=crypto.createHash('sha256');for(const file of [...files,'sw.js']){hash.update(file);hash.update(fs.readFileSync(file));}
 const release=hash.digest('hex').slice(0,16);

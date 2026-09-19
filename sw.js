@@ -1,5 +1,5 @@
 const CACHE = 'feixingqi-dev-v1';
-const FILES = ['./','./index.html','./styles.css','./game.js','./shared/board.js','./shared/engine.js','./shared/motion.js','./assets/lobby-hero.webp','./assets/planes-q-atlas.jpg'];
+const FILES = ['./assets/icons/favicon-32-v1.png','./assets/icons/apple-touch-icon-v1.png','./assets/icons/favicon-64-v1.png','./assets/icons/icon-192-v1.png','./assets/icons/icon-512-v1.png','./','./index.html','./styles.css','./game.js','./shared/board.js','./shared/engine.js','./shared/motion.js','./assets/lobby-hero.webp','./assets/planes-q-atlas.jpg'];
 self.addEventListener('install', event => { event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('feixingqi-') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', event => {

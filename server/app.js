@@ -118,7 +118,8 @@ export function createApp({ root = ROOT, dataDir = process.env.DATA_DIR || path.
         if (!['GET', 'HEAD'].includes(req.method)) throw apiError('METHOD', '方法不支持', 405);
         let file = decodeURIComponent(pathname).replace(/^\//, '') || 'index.html';
         const allowed = /^(index\.html|styles\.css|game\.js|sw\.js|manifest\.json|shared\/(board|engine|motion)\.js|assets\/[a-zA-Z0-9_.-]+\.(jpg|png|webp|woff2))$/;
-        if (!allowed.test(file)) throw apiError('NOT_FOUND', '页面不存在', 404);
+        const iconFiles = new Set(["assets/icons/favicon-32-v1.png", "assets/icons/apple-touch-icon-v1.png", "assets/icons/favicon-64-v1.png", "assets/icons/icon-192-v1.png", "assets/icons/icon-512-v1.png"]);
+        if (!allowed.test(file) && !iconFiles.has(file)) throw apiError('NOT_FOUND', '页面不存在', 404);
         const full = path.join(root, file);
         if (!fs.existsSync(full)) throw apiError('NOT_FOUND', '页面不存在', 404);
         res.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'");
